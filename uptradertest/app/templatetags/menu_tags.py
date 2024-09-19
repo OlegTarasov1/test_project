@@ -52,7 +52,7 @@ def draw_menu(context, menu_name):
 
     output = f'<ul>{format_menu([i for i in menu_hash_map.values() if not i.obj.parent_id])}</ul>'
 
-    return {'menu': mark_safe(output)}
+    return {'menu': mark_safe(output), 'name': menu_name}
 
 
 

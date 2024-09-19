@@ -1,6 +1,7 @@
 from django import template
 from django.db.models import Q
 from app.models import Menu
+from django.utils.safestring import mark_safe
 
 
 register = template.Library()
@@ -8,6 +9,20 @@ register = template.Library()
 @register.inclusion_tag('draw_menu.html', takes_context=True)
 def draw_menu(context, menu_name):
     
+    def format_menu(values):
+        output = []
+        for i in values:
+            
+            if not i.children:
+                output.append(f'<li><a href = "{i.url}">{i.obj.title}</a></li>')
+            else:
+                if i.is_open:
+                    output.append(f'<li><a href = "{i.url}">{i.obj.title}</a></li><ul>{format_menu(i.children)}</ul>')
+                else:
+                    output.append(f'<li><a href = "{i.url}">{i.obj.title}</a></li>')
+        
+        return " ".join(output)
+
     def open_parents(obj):
         if obj.obj.parent_id:
             obj.is_open = True
@@ -35,7 +50,9 @@ def draw_menu(context, menu_name):
     if obj_with_current_url:
         open_parents(obj_with_current_url)
 
-    return {'menu': menu_hash_map.values()}
+    output = f'<ul>{format_menu([i for i in menu_hash_map.values() if not i.obj.parent_id])}</ul>'
+
+    return {'menu': mark_safe(output)}
 
 
 

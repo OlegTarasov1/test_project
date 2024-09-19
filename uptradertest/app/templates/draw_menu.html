@@ -1,16 +1,1 @@
-<ul>
-    {% for item in menu %}
-        <li>
-            <a href="{{ item.url }}">{{ item.obj.title }}</a>
-            {% if item.is_open and item.children %}
-                <ul>
-                    {% for child in item.children %}
-                        <li>
-                            <a href="{{ child.url }}">{{ child.obj.title }}</a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        </li>
-    {% endfor %}
-</ul>
+{{ menu }}
